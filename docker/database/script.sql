@@ -1,0 +1,10 @@
+USE app;
+
+CREATE TABLE IF NOT EXISTS Transaction (
+    id INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    date DATETIME NOT NULL,
+    checked VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL
+);
+

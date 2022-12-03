@@ -1,15 +1,28 @@
 <?php
 
 use App\Controllers\HomeController;
+use App\Controllers\TransactionController;
 use App\Router;
+use App\App;
+use App\Config;
 
-require_once './../vendor/autoload.php';
+require_once __DIR__ .  '/../vendor/autoload.php';
 
-//Informações para tratar o request
-// var_dump($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD'],$_SERVER['QUERY_STRING']);
+session_start();
+
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
 
 $router = Router::create()
-            ->get('/', [HomeController::class, 'index']);
+            ->get('/', [HomeController::class, 'index'])
+            ->get('/transaction/upload', [TransactionController::class,'upload'])
+            ->post('/transaction/save', [TransactionController::class, 'save']);
 
 
-echo $router->resolve($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD']);
+$config = new Config($_ENV);
+
+$config->database($_ENV['DB_HOST'],$_ENV['DB_NAME'],$_ENV['DB_USER'], $_ENV['DB_PASS'],[]);
+
+(new App($router, $config))
+    ->run($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD']);
+
