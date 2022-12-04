@@ -6,9 +6,11 @@ namespace App\Controllers;
 
 use App\Views\View;
 
-class HomeController {
+class HomeController extends Controller{
 
-    public function index() {
-        return View::render('index');
+    public function index() : string{
+        return self::view('index', [
+            'title' => 'Home'
+        ]);
     }
 }

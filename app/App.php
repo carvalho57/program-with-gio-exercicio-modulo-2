@@ -24,8 +24,8 @@ class App {
         try  {
             echo $this->router->resolve($requestUri,$requestMethod);
         } catch(RouteNotFoundException $e) {
-            http_response_code(404);
-            View::render('404');
+            http_response_code(404);      
+            echo View::create('error/404');
             die();
         }
     }

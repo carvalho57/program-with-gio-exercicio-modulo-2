@@ -15,13 +15,16 @@ $dotenv->load();
 
 $router = Router::create()
             ->get('/', [HomeController::class, 'index'])
+            ->get('/transaction', [TransactionController::class, 'index'])
             ->get('/transaction/upload', [TransactionController::class,'upload'])
             ->post('/transaction/save', [TransactionController::class, 'save']);
 
 
 $config = new Config($_ENV);
 
-$config->database($_ENV['DB_HOST'],$_ENV['DB_NAME'],$_ENV['DB_USER'], $_ENV['DB_PASS'],[]);
+$config->database($_ENV['DB_HOST'],$_ENV['DB_NAME'],$_ENV['DB_USER'], $_ENV['DB_PASS'],[
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+]);
 
 (new App($router, $config))
     ->run($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD']);

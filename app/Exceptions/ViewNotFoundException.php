@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-class ViewNotFoundException implements \Exception {
+class ViewNotFoundException extends \Exception {
     protected $message  = 'View not found';
 }

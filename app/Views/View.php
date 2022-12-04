@@ -5,20 +5,37 @@ namespace App\Views;
 use App\Exceptions\ViewNotFoundException;
 
 class View {
-    
-    public static function render(string $name, array $values = []) : string{
-        $path = __DIR__ . "/${name}.php";        
 
-        if(!file_exists($path)) {
+    public function __construct(protected string $viewName, protected array $data = []) {
+
+    }
+
+    public static  function create(string $viewName, array $data = []) {
+        return new static($viewName,$data);
+    }
+
+    public function render() : string{
+        $viewPath = __DIR__ . "/{$this->viewName}.php";        
+        $layoutPath = __DIR__ . "/shared/layout.php";
+        if(!file_exists($viewPath)) {
             throw new ViewNotFoundException();
         }
 
+        extract($this->data);
+    
         ob_start();
-        include $path;
+        include $viewPath;
+        $html = ob_get_clean();                    
+        
+        $layout = file_get_contents($layoutPath);
 
-        $html = ob_get_clean();
-        return (string)$html;
+        $renderedView =  str_replace(["{{ content }}", "{{ title }}"], [$html, $this->data['title'] ?? 'Document'], $layout);
+        return (string)$renderedView;
     }
 
-    
+    public function __toString()
+    {
+        return (string)$this->render();
+    }
+  
 }

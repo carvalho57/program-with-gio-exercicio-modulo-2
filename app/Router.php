@@ -40,7 +40,10 @@ class Router {
     public function resolve($uri,$method) {
 
         $uri = explode("?",$uri)[0];
-        $action = $this->routes[$method][$uri];
+        $action = $this->routes[$method][$uri] ?? null;
+
+        if(!$action)
+            throw new RouteNotFoundException();
 
         if(is_callable($action))
             return call_user_func($action);
